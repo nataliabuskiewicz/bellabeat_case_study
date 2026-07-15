@@ -315,3 +315,22 @@ CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.hourly_steps_tr
 * **Visualization optimization:** The sleep efficiency axis was limited to **70–100%**, improving chart readability without altering the underlying data.
 
 </details>
+## 4. 📊 Analyze
+
+To identify actionable consumer behavior patterns, the cleaned dataset was analyzed from three perspectives: **sleep quality**, **daily activity patterns**, and **hourly activity trends**. The findings below summarize the most relevant insights derived from the SQL analysis and Tableau visualizations.
+
+---
+
+### 📈 Insight 1: Daily Activity vs. Sleep Efficiency
+
+![Daily Activity vs Sleep Efficiency](images/daily_activity_sleep_efficiency.png)
+
+#### Key Findings
+
+* **The Bedtime Gap:** Many users spend a noticeable amount of time awake in bed, creating a gap between total time in bed and actual sleep.
+* **Movement–Sleep Synergy:** Higher daily step counts are associated with more consistent and higher sleep efficiency.
+* **Healthy Sleep Baseline:** The average sleep efficiency reached **93.55%**, indicating that most users sleep well once they fall asleep.
+
+#### Business Insight
+
+The analysis suggests a positive relationship between daily movement and sleep quality. While most users achieve healthy sleep efficiency, the consistent gap between **time in bed** and **time asleep** indicates that falling asleep—not staying asleep—may be a more common challenge. This presents an opportunity for Bellabeat to promote activity-based wellness features alongside bedtime routines and sleep optimization tools.
