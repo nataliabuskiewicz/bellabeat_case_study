@@ -69,8 +69,8 @@ For the Data Processing phase, **Google BigQuery (SQL)** was chosen over spreads
 <summary><b>🔹 Table: total_sleep_day</b></summary>
 <br>
 
-*   **Actions:** Converted `Id` from `STRING` to `INT64`, transformed `SleepDay` into a proper `DATE` format, and removed 3 identical duplicate rows using `DISTINCT`.
-*   **SQL Script executed:**
+* **Actions:** Converted `Id` from `STRING` to `INT64`, transformed `SleepDay` into a proper `DATE` format, and removed 3 identical duplicate rows using `DISTINCT`.
+* **SQL Script executed:**
 
 ```sql
 CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.total_sleep_day` AS (
@@ -89,20 +89,22 @@ CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.total_sleep_day
     Id,
     SleepDay
 );
+```
+
 </details>
 
 <details>
 <summary><b>🔹 Table: total_daily_activity</b></summary>
 <br>
 
-*   **Actions:** Standardized `Id` into `INT64`, converted `ActivityDate` into a proper `DATE` format, and detected/eliminated cloned entries dated April 12, 2016.
-*   **SQL Script executed:**
+* **Actions:** Standardized `Id` into `INT64`, converted `ActivityDate` into a proper `DATE` format, and detected/eliminated cloned entries dated April 12, 2016.
+* **SQL Script executed:**
 
 ```sql
 CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.total_daily_activity` AS (
   SELECT
     CAST(Id AS INT64) AS Id, -- Displaying Id is an integer
-    CAST(ActivityDate AS DATE) AS ActivityDate, -- Displaying ActivityDate is a date
+    CAST(ActivityDate AS DATE) AS ActivityDate, -- Displaying ActivityDate as a date
     TotalSteps,
     TotalDistance,
     TrackerDistance,
@@ -121,4 +123,195 @@ CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.total_daily_act
     SELECT DISTINCT * FROM `bellabeat-case-study-498811.fitbit_data.total_daily_activity`
   )
 );
+```
+
+</details>
+<details>
+<summary><b>🔹 Table: total_hourly_steps</b></summary>
+<br>
+
+* **Actions:** Converted `StepTotal` into `INT64`, standardized `ActivityHour` into a proper `TIMESTAMP` format, and combined both monthly datasets using `UNION ALL` to create a unified hourly activity table for time-series analysis.
+* **SQL Script executed:**
+
+```sql
+CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.total_hourly_steps` AS (
+
+  -- 1. First month - fixing date and time format, converting steps into integers
+  SELECT
+    Id,
+    PARSE_TIMESTAMP('%m/%d/%Y %I:%M:%S %p', ActivityHour) AS ActivityHour,
+    CAST(StepTotal AS INT64) AS StepTotal
+  FROM `bellabeat-case-study-498811.fitbit_data.hourly_steps_v1`
+
+  UNION ALL
+
+  -- 2. Second month - fixing date and time format, converting steps into integers
+  SELECT
+    Id,
+    PARSE_TIMESTAMP('%m/%d/%Y %I:%M:%S %p', ActivityHour) AS ActivityHour,
+    CAST(StepTotal AS INT64) AS StepTotal
+  FROM `bellabeat-case-study-498811.fitbit_data.hourly_steps_v2`
+
+);
+```
+
+</details>
+
+<details>
+<summary><b>🔹 Table: activity_and_sleep_correlation</b></summary>
+<br>
+
+* **Actions:** Joined daily activity and sleep datasets using an `INNER JOIN` on `Id` and `Date`. Engineered two new analytical features: `MinutesWastedInBed` (time spent in bed but not asleep) and `SleepEfficiencyPercentage` (percentage of time in bed spent sleeping). Applied a quality filter to exclude zero-step days and reduce non-wear bias.
+* **SQL Script executed:**
+
+```sql
+SELECT
+    -- 1. Standardizing keys (dates are already in DATE format)
+    CAST(a.Id AS INT64) AS Id,
+    a.ActivityDate,
+
+    -- 2. Daily activity metrics from total_daily_activity
+    a.TotalSteps,
+    a.TotalDistance,
+    a.VeryActiveMinutes,
+    a.FairlyActiveMinutes,
+    a.LightlyActiveMinutes,
+    a.SedentaryMinutes,
+    a.Calories,
+
+    -- 3. Sleep metrics from total_sleep_day
+    s.TotalSleepRecords,
+    s.TotalMinutesAsleep,
+    s.TotalTimeInBed,
+
+    -- 4. New calculated columns (Feature Engineering)
+    (s.TotalTimeInBed - s.TotalMinutesAsleep) AS MinutesWastedInBed,
+    (s.TotalMinutesAsleep / s.TotalTimeInBed) AS SleepEfficiencyPercentage
+
+FROM `bellabeat-case-study-498811.fitbit_data.total_daily_activity` AS a
+INNER JOIN `bellabeat-case-study-498811.fitbit_data.total_sleep_day` AS s
+    -- Consolidation via unique user Id and matching Date columns directly
+    ON CAST(a.Id AS INT64) = CAST(s.Id AS INT64)
+    AND a.ActivityDate = s.SleepDay
+
+-- Data quality filter to mitigate non-wear days ("Zero-Step Skew")
+WHERE a.TotalSteps > 0;
+```
+
+</details>
+<details>
+<summary><b>🔹 Table: cleaned_activity_with_segments (User segmentation)</b></summary>
+<br>
+
+* **Actions:** Built a user segmentation table using Common Table Expressions (`WITH`). Calculated each user's true average daily step count while excluding non-wear days (`TotalSteps > 0`) to prevent downward bias. Classified users into four standardized activity segments using a `CASE WHEN` statement (`Sedentary`, `Lightly active`, `Fairly active`, `Very active`) and joined the resulting segments back to the original daily activity table, creating a reusable categorical dimension for Tableau visualizations.
+
+* **SQL Script executed:**
+
+```sql
+CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.cleaned_activity_with_segments` AS (
+
+  -- Step 1: Calculate the average daily steps for EACH unique user (excluding days when the watch wasn't worn)
+  WITH user_averages AS (
+    SELECT
+      Id,
+      AVG(TotalSteps) AS avg_daily_steps
+    FROM
+      `bellabeat-case-study-498811.fitbit_data.total_daily_activity`
+    WHERE
+      TotalSteps > 0 -- Filter out days with 0 steps to avoid skewing the average
+    GROUP BY
+      Id
+  ),
+
+  -- Step 2: Categorize each user into a permanent segment based on their TRUE average steps
+  user_segments AS (
+    SELECT
+      Id,
+      avg_daily_steps,
+      CASE
+        WHEN avg_daily_steps < 5000 THEN 'Sedentary'
+        WHEN avg_daily_steps >= 5000 AND avg_daily_steps < 7500 THEN 'Lightly active'
+        WHEN avg_daily_steps >= 7500 AND avg_daily_steps < 10000 THEN 'Fairly active'
+        WHEN avg_daily_steps >= 10000 THEN 'Very active'
+        ELSE 'No data'
+      END AS ActivitySegment
+    FROM
+      user_averages
+  )
+
+  -- Step 3: Combine the calculated segments with the original daily activity records
+  SELECT
+    act.*,
+    ROUND(seg.avg_daily_steps, 0) AS UserAvgDailySteps,
+    seg.ActivitySegment
+  FROM
+    `bellabeat-case-study-498811.fitbit_data.total_daily_activity` AS act
+  JOIN
+    user_segments AS seg
+    ON act.Id = seg.Id
+);
+```
+
+</details>
+<details>
+<summary><b>🔹 Table: hourly_steps_trends (Time-Series Aggregation)</b></summary>
+<br>
+
+* **Actions:** Extracted the hour component (`0–23`) from timestamp values using `EXTRACT(HOUR FROM ...)`. Filtered out non-wear periods (`StepTotal > 0`) and aggregated all user records into 24 hourly benchmarks, revealing overall daily activity patterns suitable for time-series visualization in Tableau.
+
+* **SQL Script executed:**
+
+```sql
+CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.hourly_steps_trends` AS (
+
+  -- Step 1: Extract the hour from the timestamp and clean the data
+  WITH formatted_hourly_data AS (
+    SELECT
+      Id,
+      -- Extracting only the hour integer (0 to 23) from the ActivityHour column
+      EXTRACT(HOUR FROM ActivityHour) AS HourOfDay,
+      StepTotal
+    FROM
+      `bellabeat-case-study-498811.fitbit_data.total_hourly_steps`
+    WHERE
+      StepTotal > 0 -- Filtering out hours when the device wasn't worn to ensure accurate averages
+  )
+
+  -- Step 2: Calculate the overall average steps for each hour of the day
+  SELECT
+    HourOfDay,
+    ROUND(AVG(StepTotal), 0) AS AvgStepsPerHour
+  FROM
+    formatted_hourly_data
+  GROUP BY
+    HourOfDay
+  ORDER BY
+    HourOfDay ASC
+);
+```
+
+</details>
+
+ ### 🧹 Advanced Data Cleaning & Methodology
+
+> 💡 *Click on the section below to expand and review the advanced data cleaning decisions, anomaly handling, and analytical methodology.*
+
+<details>
+<summary><b>🔹 Key Data Quality Decisions</b></summary>
+<br>
+
+...
+
+* **Hardware-generated data:** Since the dataset originated from Fitbit devices rather than manual user input, no typo correction or text cleaning was required.
+
+* **Non-wear day filtering:** Records with `TotalSteps = 0` or `StepTotal = 0` were treated as device non-wear periods rather than true inactivity. These observations were excluded from baseline calculations (`WHERE TotalSteps > 0`) to avoid underestimating average user activity.
+
+* **Sleep telemetry anomaly:** Extremely long sleep sessions (>720 minutes in bed) were identified as sensor errors caused by off-wrist tracking. These records were removed using `TotalTimeInBed <= 720` while preserving realistic long sleep durations.
+
+* **Metric normalization:** Sleep quality was measured using a calculated field (`SleepEfficiencyPercentage = TotalMinutesAsleep / TotalTimeInBed`) instead of raw minutes, allowing meaningful comparisons across users with different sleep durations.
+
+* **Statistical outlier handling:** One user with exceptionally low sleep efficiency (~60%) disproportionately influenced the regression model. The outlier was excluded from the Tableau trend line to better represent the overall population while remaining documented as a potentially valuable user persona.
+
+* **Visualization optimization:** The sleep efficiency axis was limited to **70–100%**, improving chart readability without altering the underlying data.
+
 </details>
