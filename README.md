@@ -38,16 +38,13 @@ To ensure data integrity, the dataset was evaluated against the **ROCCC** standa
 
 ### ⛔ **Dataset Limitations & Mitigation Strategies**
 
-> ⚠️ **Methodological Note:** Recognizing these data constraints was critical to shaping a rigorous analysis. Below are the three key limitations identified during the preparation phase and how they were addressed:
+> ⚠️ **Methodological Note:** Identifying these data constraints was essential for ensuring a reliable analysis. The key limitations and mitigation approaches are summarized below:
 
-*   **Small Sample Size (Physical Activity):** 
-    While checking unique IDs (`DISTINCT Id`), the physical activity table contains data for only **35 users**. While the general guideline of the Central Limit Theorem ($n \ge 30$) is technically satisfied (allowing for statistical inference), a larger sample size would be highly preferable to strengthen the generalizability of the findings.
-*   **User engagement drop-off (Sleep Tracking):** 
-    The sleep dataset includes data for only **24 users**, resulting in a much smaller sample size. Although this limits the statistical strength of the sleep analysis, it provides an early, crucial business indicator: *sleep tracking has significantly lower user engagement than active daytime tracking.*
-*   **Unrecorded Time (Missing Minutes):** 
-    When analyzing daily activity minutes (*Sedentary, Lightly Active, Fairly Active, Very Active*), the daily total sums up to approximately **20–22 hours** instead of a full 24-hour day (1440 minutes). This indicates that users frequently take off their trackers (e.g., for charging or bathing), leading to unrecorded time. 
-    *   **Mitigation Strategy:** To prevent distortion of insights, all calculations were adjusted to represent each activity category as a **percentage of the total recorded time** rather than the absolute 24 hours.
+* **Small Sample Size (Physical Activity):**  The physical activity dataset contains data from only **35 users** (`DISTINCT Id`). While sufficient for basic statistical analysis, a larger sample would improve the generalizability of findings.
 
+* **User Engagement Drop-off (Sleep Tracking):**  The sleep dataset includes only **24 users**, limiting the strength of sleep-related conclusions. However, this also highlights an important business insight: sleep tracking shows significantly lower user engagement than daytime activity tracking.
+
+* **Unrecorded Time (Missing Minutes):**  Daily activity records cover approximately **20–22 hours** instead of a full 24-hour period, likely due to users removing their devices. However, a mitigation strategy has been applied. Activity levels were analyzed as a **percentage of recorded time** rather than absolute daily minutes to avoid biased results.
 ---
 ## 3. 🛠️ Process
 
