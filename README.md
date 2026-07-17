@@ -374,7 +374,7 @@ The final insights were transformed into interactive visualizations and a concis
 
 Explore the complete analysis through interactive dashboards featuring user segmentation, activity patterns, and sleep-related insights.
 
-[Bellabeat Case Study | Tableau Public](#)
+[Bellabeat Case Study | Tableau Public](https://public.tableau.com/authoring/BellabeatCaseStudy_17815253373240/Dashboard2#2)
 
 ### 📑 Executive Presentation
 
