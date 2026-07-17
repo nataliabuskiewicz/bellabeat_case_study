@@ -390,26 +390,26 @@ Based on the data-driven insights uncovered during the analysis phase, the follo
 
 ### 1. Combating the "Sedentary Trap" via Micro-Habits
 
-**Data Insight:** User segmentation analysis revealed that **81.96%** of users fall into the Sedentary category, showing that the primary audience consists of everyday low-activity users rather than fitness enthusiasts.
+**Data Insight:** Our user segmentation analysis revealed that an overwhelming **81.96%** of users fall into the Sedentary category, proving that the primary audience consists of everyday corporate workers or low-activity individuals, rather than fitness enthusiasts.
 
-**Business Recommendation:** Shift the application’s core positioning from fitness tracking toward an **"Everyday Wellness Companion"** focused on building sustainable daily habits.
+**Business Recommendation:** Shift the application’s core positioning from aggressive fitness tracking to an **"Everyday Wellness Companion."**
 
-**Actionable Feature:** Introduce a **"Smart Desk Break"** feature within the Bellabeat app. Instead of generic hourly alerts, implement low-friction micro-interventions, such as short stretching prompts or hydration reminders, during standard office hours (**09:00–17:00**). These interventions would help users reduce prolonged inactivity and build healthier daily routines.
+**Actionable Feature:** Introduce a **"Smart Desk Break"** feature within the Bellabeat app. Instead of generic hourly alerts, implement low-friction, stylish micro-interventions (e.g., a brief 2-minute stretching prompt or a hydration reminder) specifically active during standard office hours (**09:00–17:00**), helping busy women seamlessly break their continuous sedentary cycles.
 
 
 ### 2. Capturing the Post-Work Momentum (The 19:00 Peak)
 
-**Data Insight:** Hourly time-series analysis revealed that physical activity increases after work, reaching the highest daily peak at **19:00** with **724 steps/hour**, following a noticeable activity drop at **15:00**.
+**Data Insight:** The hourly time-series tracking identified that physical activity builds steadily post-work, reaching its absolute global peak at **19:00 (7:00 PM)** with **724 steps/hour**, right after a severe mid-afternoon drop at **15:00**.
 
-**Business Recommendation:** Implement precision-timed user engagement strategies by targeting moments when users are most physically active and receptive to health-related actions.
+**Business Recommendation:** Execute precision-timed user engagement. The dataset proves that users are most physically receptive and available for health-conscious actions in the evening.
 
-**Actionable Feature:** Deploy predictive push notifications around **18:15**, before the evening activity peak. Instead of interrupting users during their most active period, Bellabeat can provide timely prompts encouraging behaviors such as an evening walk. Additionally, introduce an afternoon energy-recharge feature at **15:00**, such as a short guided breathing exercise, to help users overcome the mid-afternoon activity decline.
+**Actionable Feature:** Deploy dynamic, predictive push notifications around **18:15**. Rather than alerting users during their peak activity, the app should nudge them 45 minutes before (e.g., *"The weather is perfect for a 20-minute evening walk to clear your head after work"*). Additionally, introduce an afternoon energy-recharge feature at **15:00** (such as a 3-minute guided breathing exercise) to combat the documented mid-afternoon slump.
 
 
-### 3. Helping Users Maintain High Sleep Quality
+### 3. Helping Users Keep Their High Sleep Quality
 
-**Data Insight:** The analysis shows that Bellabeat users already achieve strong sleep quality, with an average sleep efficiency of **93.55%**. However, users with higher daily activity levels demonstrate more consistent and predictable sleep patterns.
+**Data Insight:** Our analysis shows that Bellabeat users achieve strong sleep quality, with a high average sleep efficiency of **93.55%**. However, the chart also reveals that users who are more active during the day have more stable and predictable sleep patterns, with fewer sudden drops in sleep quality.
 
-**Business Recommendation:** Use the app to strengthen users’ awareness of the connection between daily movement and sleep quality.
+**Business Recommendation:** Use the app to show users the direct connection between their daily movement and their night's rest.
 
-**Actionable Feature:** Introduce a **"Sleep Protector"** feature that connects daily activity with sleep outcomes. The app could provide positive feedback when users achieve both activity and sleep goals, while offering evening relaxation tools, such as short meditation or breathing exercises, when sleep quality decreases.
+**Actionable Feature:** Introduce a **"Sleep Protector"** feature. The app can send a positive morning notification when a user achieves both their step goal and high sleep quality (e.g., *"Your active day yesterday paid off! You achieved 94% sleep efficiency last night. Keep it up today!"*). For nights when efficiency slightly dips, offer simple, relaxing evening wind-down tools such as short meditation or breathing exercises to help users ease into rest.
