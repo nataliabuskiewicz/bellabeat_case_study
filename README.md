@@ -59,8 +59,6 @@ For the Data Processing phase, **Google BigQuery (SQL)** was chosen over spreads
 *   **Table Consolidation:** Executed `INNER JOIN` operations to unify daily activity and sleep metrics into a consolidated analytical view, matching distinct users by both `Id` and `Date`.
 *   **Quality Assurance Checks:** Evaluated metrics against physical logical boundaries (e.g., verifying that sleep efficiency remained strictly between 0–100% and total logged minutes did not exceed logical limits). Executed `GROUP BY ... HAVING COUNT(*) > 1` scans to guarantee no duplicate rows or overlapping data records remained.
 
----
-
 ### 🗂️ Data Manipulation Log
 
 > 💡 *Click on the table section below to expand and view the SQL cleaning script.*
@@ -316,11 +314,11 @@ CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.hourly_steps_tr
 
 </details>
 
-## 4. 📊 Analyze
+---
+
+## 4. 🛠️ Analyze
 
 To identify actionable consumer behavior patterns, the cleaned dataset was analyzed from three perspectives: **sleep quality**, **daily activity patterns**, and **hourly activity trends**. The findings below summarize the most relevant insights derived from the SQL analysis and Tableau visualizations.
-
----
 
 ### 📈 Insight 1: Daily Activity vs. Sleep Efficiency
 
@@ -334,4 +332,84 @@ To identify actionable consumer behavior patterns, the cleaned dataset was analy
 
 #### Business Insight
 
-The analysis suggests a positive relationship between daily movement and sleep quality. While most users achieve healthy sleep efficiency, the consistent gap between **time in bed** and **time asleep** indicates that falling asleep—not staying asleep—may be a more common challenge. This presents an opportunity for Bellabeat to promote activity-based wellness features alongside bedtime routines and sleep optimization tools.
+Higher daily activity is associated with better sleep quality, while the gap between time in bed and time asleep highlights an opportunity for Bellabeat to promote physical activity alongside bedtime routines and sleep optimization features.
+
+### 🚶 Insight 2: Daily Activity Patterns
+
+![Daily Activity Patterns](images/daily_activity_steps.png)
+
+#### Key Findings
+
+* **Morning Surge:** Activity rises rapidly between **05:00–08:00**, reaching an early peak of **680 steps/hour**, reflecting morning routines and commutes.
+* **Workday Plateau:** From **08:00–15:00**, step counts remain relatively stable before dropping to a daytime low at **15:00** (526 steps/hour), suggesting a typical afternoon slowdown.
+* **Evening Peak:** Activity increases again after work, reaching the highest daily average at **19:00** with **724 steps/hour**, before declining into the evening.
+
+#### Business Insight
+
+User activity follows clear daily routines, with movement concentrated before and after standard working hours. These predictable patterns create opportunities for Bellabeat to deliver timely reminders, activity challenges, and personalized wellness prompts during periods of lower activity—particularly in the afternoon—to encourage more consistent movement throughout the day.
+
+
+### 🏃 Insight 3: Daily Activity Segmentation
+
+![Daily Activity Segments](images/daily_activity_segments.png)
+
+#### Key Findings
+
+* **Sedentary Users:** The majority of users (**81.96%**) fall into the sedentary category, representing the dominant lifestyle pattern in the dataset.
+* **Lightly Active Users:** **15.31%** of users show light activity levels, while only a small fraction reach higher activity categories:
+  * Fairly Active: **1.11%**
+  * Very Active: **1.63%**
+
+#### Business Insight
+
+The analysis shows that Bellabeat users are not primarily fitness-focused consumers. Instead, most users have low daily activity levels, highlighting an opportunity for Bellabeat to focus on habit-building, movement encouragement, and sedentary behavior prevention rather than advanced athletic tracking.
+
+---
+
+## 5. 📊 Share
+
+The final insights were transformed into interactive visualizations and a concise executive presentation designed to communicate key findings and product opportunities to Bellabeat stakeholders.
+
+### 🎨 Interactive Tableau Dashboard
+
+Explore the complete analysis through interactive dashboards featuring user segmentation, activity patterns, and sleep-related insights.
+
+[Bellabeat Case Study | Tableau Public](#)
+
+### 📑 Executive Presentation
+
+A business-focused slide deck summarizing the methodology, key insights, and strategic recommendations based on the analysis.
+
+[View Presentation Slides](#)
+
+---
+
+## 6. 🚀 Act
+
+Based on the data-driven insights uncovered during the analysis phase, the following strategic recommendations focus on product development, feature optimization, and targeted marketing alignment.
+
+### 1. Combating the "Sedentary Trap" via Micro-Habits
+
+**Data Insight:** User segmentation analysis revealed that **81.96%** of users fall into the Sedentary category, showing that the primary audience consists of everyday low-activity users rather than fitness enthusiasts.
+
+**Business Recommendation:** Shift the application’s core positioning from fitness tracking toward an **"Everyday Wellness Companion"** focused on building sustainable daily habits.
+
+**Actionable Feature:** Introduce a **"Smart Desk Break"** feature within the Bellabeat app. Instead of generic hourly alerts, implement low-friction micro-interventions, such as short stretching prompts or hydration reminders, during standard office hours (**09:00–17:00**). These interventions would help users reduce prolonged inactivity and build healthier daily routines.
+
+
+### 2. Capturing the Post-Work Momentum (The 19:00 Peak)
+
+**Data Insight:** Hourly time-series analysis revealed that physical activity increases after work, reaching the highest daily peak at **19:00** with **724 steps/hour**, following a noticeable activity drop at **15:00**.
+
+**Business Recommendation:** Implement precision-timed user engagement strategies by targeting moments when users are most physically active and receptive to health-related actions.
+
+**Actionable Feature:** Deploy predictive push notifications around **18:15**, before the evening activity peak. Instead of interrupting users during their most active period, Bellabeat can provide timely prompts encouraging behaviors such as an evening walk. Additionally, introduce an afternoon energy-recharge feature at **15:00**, such as a short guided breathing exercise, to help users overcome the mid-afternoon activity decline.
+
+
+### 3. Helping Users Maintain High Sleep Quality
+
+**Data Insight:** The analysis shows that Bellabeat users already achieve strong sleep quality, with an average sleep efficiency of **93.55%**. However, users with higher daily activity levels demonstrate more consistent and predictable sleep patterns.
+
+**Business Recommendation:** Use the app to strengthen users’ awareness of the connection between daily movement and sleep quality.
+
+**Actionable Feature:** Introduce a **"Sleep Protector"** feature that connects daily activity with sleep outcomes. The app could provide positive feedback when users achieve both activity and sleep goals, while offering evening relaxation tools, such as short meditation or breathing exercises, when sleep quality decreases.
