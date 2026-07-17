@@ -315,6 +315,7 @@ CREATE OR REPLACE TABLE `bellabeat-case-study-498811.fitbit_data.hourly_steps_tr
 * **Visualization optimization:** The sleep efficiency axis was limited to **70–100%**, improving chart readability without altering the underlying data.
 
 </details>
+
 ## 4. 📊 Analyze
 
 To identify actionable consumer behavior patterns, the cleaned dataset was analyzed from three perspectives: **sleep quality**, **daily activity patterns**, and **hourly activity trends**. The findings below summarize the most relevant insights derived from the SQL analysis and Tableau visualizations.
@@ -323,7 +324,7 @@ To identify actionable consumer behavior patterns, the cleaned dataset was analy
 
 ### 📈 Insight 1: Daily Activity vs. Sleep Efficiency
 
-![Daily Activity vs Sleep Efficiency](images/daily_activity_sleep_efficiency.png)
+![Daily Activity vs Sleep Efficiency](images/sleep_efficiency.png)
 
 #### Key Findings
 
