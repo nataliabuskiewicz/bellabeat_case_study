@@ -374,7 +374,7 @@ Explore the complete analysis through interactive dashboards featuring user segm
 
 A business-focused slide deck summarizing the methodology, key insights, and strategic recommendations based on the analysis.
 
-[View Presentation Slides](#)
+[View Presentation Slides](https://canva.link/b32zj2w3henq36n)
 
 ---
 
